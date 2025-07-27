@@ -103,4 +103,12 @@ FROM mysql_catalog.dev_db.userdetail u
 WHERE u.id IN (SELECT userid FROM profile_userids)
 LIMIT 10;
 
+WITH userids AS (
+    SELECT u.id
+    FROM mysql_catalog.dev_db.userdetail u
+)
+SELECT p.profilename,current_time(),p.createdon, date_add(p.createdon, INTERVAL 2 DAY),datediff(p.createdon,current_date())
+FROM sqlserver_catalog.settings.profile p
+WHERE cast(p.userid as DOUBLE) IN (SELECT id FROM userids) and p.createdon < current_date()
+LIMIT 10;
 
